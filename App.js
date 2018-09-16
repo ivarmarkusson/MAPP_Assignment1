@@ -1,6 +1,42 @@
-//GLOBAL.self = GLOBAL; // eslint-disable-line
 import React from "react";
-import { StyleSheet, Text, View, Button, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Animated
+} from "react-native";
+
+class Fade extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      fadeAnimation: new Animated.Value(0)
+    };
+  }
+
+  componentDidMount() {
+    Animated.timing(this.state.fadeAnimation, {
+      toValue: 1,
+      duration: 5000
+    }).start();
+  }
+
+  render() {
+    let { fadeAnimation } = this.state;
+    return (
+      <Animated.Text
+        style={{
+          ...this.props.style,
+          opacity: fadeAnimation
+        }}
+      >
+        {this.props.children}
+      </Animated.Text>
+    );
+  }
+}
 
 export default class App extends React.Component {
   constructor(props) {
@@ -29,13 +65,21 @@ export default class App extends React.Component {
             style={{ width: 100, height: 100 }}
             source={{ uri: this.state.info.avatar }}
           />
-          <Text>
-            {this.state.info.name.first_name} {this.state.info.name.last_name}
-          </Text>
-          {<Button title="Show work Info" onPress={this.changeFlag} />}
-          <Text>{this.state.info.home.address}</Text>
-          <Text>{this.state.info.home.email}</Text>
-          <Text>{this.state.info.home.phone_number}</Text>
+          <Fade>
+            <Text style={styles.name}>
+              {this.state.info.name.first_name} {this.state.info.name.last_name}
+            </Text>
+          </Fade>
+          <TouchableOpacity
+            style={styles.button}
+            title="Show work Info"
+            onPress={this.changeFlag}
+          >
+            <Text style={styles.buttonText}>show work Info</Text>
+          </TouchableOpacity>
+          <Text style={styles.text}>{this.state.info.home.address}</Text>
+          <Text style={styles.text}>{this.state.info.home.email}</Text>
+          <Text style={styles.text}>{this.state.info.home.phone_number}</Text>
         </View>
       );
     }
@@ -45,15 +89,23 @@ export default class App extends React.Component {
           style={{ width: 100, height: 100 }}
           source={{ uri: this.state.info.avatar }}
         />
-        <Text>
-          {this.state.info.name.first_name} {this.state.info.name.last_name}
-        </Text>
-        {<Button title="Show home Info" onPress={this.changeFlag} />}
-        <Text>{this.state.info.work.address}</Text>
-        <Text>{this.state.info.work.email}</Text>
-        <Text>{this.state.info.work.phone_number}</Text>
-        <Text>{this.state.info.work.company}</Text>
-        <Text>
+        <Fade>
+          <Text style={styles.name}>
+            {this.state.info.name.first_name} {this.state.info.name.last_name}
+          </Text>
+        </Fade>
+        <TouchableOpacity
+          style={styles.button}
+          title="Show home Info"
+          onPress={this.changeFlag}
+        >
+          <Text style={styles.buttonText}>show home Info</Text>
+        </TouchableOpacity>
+        <Text style={styles.text}>{this.state.info.work.address}</Text>
+        <Text style={styles.text}>{this.state.info.work.email}</Text>
+        <Text style={styles.text}>{this.state.info.work.phone_number}</Text>
+        <Text style={styles.text}>{this.state.info.work.company}</Text>
+        <Text style={styles.text}>
           {this.state.info.work.department}, {this.state.info.work.job_title}
         </Text>
       </View>
@@ -67,14 +119,34 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center"
-  } /*,
-  TextStyle: {
-    padding: 5,
+  },
+  text: {
+    fontSize: 18,
     borderBottomColor: "black",
-    borderBottomWidth: 1,
-    height: "10%",
-    width: "70%",
-    alignItems: "center",
-    justifyContent: "center"
-  }*/
+    borderBottomWidth: 2,
+    width: "80%",
+    textAlign: "center",
+    margin: 10
+  },
+  button: {
+    marginTop: 10,
+    paddingRight: 20,
+    paddingLeft: 20,
+    paddingTop: 15,
+    paddingBottom: 15,
+    marginLeft: 30,
+    marginRight: 30,
+    backgroundColor: "#00BCD4",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#fff"
+  },
+  buttonText: {
+    color: "#fff",
+    textAlign: "center"
+  },
+  name: {
+    fontSize: 20,
+    margin: 20
+  }
 });
